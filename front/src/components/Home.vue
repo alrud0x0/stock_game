@@ -1,11 +1,10 @@
 <template>
 <div>
-  <div class="outline-margin">
-    <userPoint />
+  <userPoint />
+  <div v-if="isVotingAvaliable">
+    <b-button block variant="info" :to="{path : '/game/upcoming'}">게임 참여하기 <b-icon icon="arrow-bar-right"></b-icon></b-button>
   </div>
-  <div class="outline-margin">
-    <gameTable />
-  </div>
+  <gameTable />
 </div>
 </template>
 
