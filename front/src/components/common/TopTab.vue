@@ -7,8 +7,8 @@
   <b-collapse id="nav-collapse" is-nav>
     <b-navbar-nav class="ml-auto">
       <b-nav-item :to="{path : '/home'}" :active="$route.name == 'home'">HOME</b-nav-item>
-      <b-nav-item :to="{path : '/game/upcoming'}" :active="$route.name == 'upcomingGame'">Current Game</b-nav-item>
-      <b-nav-item :to="{path : '/game/current'}">Proceeding Game</b-nav-item>
+      <b-nav-item :to="{path : '/game/current'}" :active="$route.name == 'currentGame'">Current Game</b-nav-item>
+      <b-nav-item :to="{path : '/game/history'}" :active="$route.name == 'gameHistory'">Game History</b-nav-item>
       <b-nav-item :to="{path : '/rank'}" :active="$route.name == 'rank'">Ranking</b-nav-item>
       <b-nav-item :to="{path : '/info'}">Info</b-nav-item>
     </b-navbar-nav>
