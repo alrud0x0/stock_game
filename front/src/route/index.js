@@ -10,7 +10,8 @@ Vue.use(VueRouter)
 const routes = [
   { path : '/home', component: Home, name: 'home' },
   { path : '/rank', component: Rank, name: 'rank' },
-  { path : '/game/upcoming', component: GameTable, name: 'upcomingGame' }
+  { path : '/game/current', component: GameTable, name: 'currentGame' },
+  { path : '/game/history', component: GameTable, name: 'gameHistory' }
 ]
 
 //router 인스턴스 생성
