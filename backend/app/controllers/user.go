@@ -91,23 +91,46 @@ func (uCtrl UserController) JoinGame() revel.Result {
 
 	var jsonData map[string]interface{}
 	uCtrl.Params.BindJSON(&jsonData)
+	stockId := int(jsonData["stockId"].(float64))
+	reason := jsonData["reason"].(string)
 
-	stock, err := GetStockByParam(int(jsonData["stockId"].(float64)))
+	stock, err := GetStockById(stockId)
 	if err != nil {
 		description := fmt.Sprint(err)
 		revel.AppLog.Warn(description)
 		return uCtrl.RenderText("Invalid Stock")
 	}
 
-	startPrice := int(jsonData["startPrice"].(float64))
-	reason := jsonData["reason"].(string)
+	gamedata, err := model.GetGameDataByGameStock(game.Id, stock.Id)
+	if err == nil {
+		gamedata, err = model.UpdateGameData(gamedata.Id, 1)
+		if err != nil {
+			description := fmt.Sprint(err)
+			revel.AppLog.Warn(description)
+			return uCtrl.RenderText("fail to update gamedata: "+description)
+		}
+	} else {
+		gamedata, err = model.AddGameData(game.Id, stockId, stock.Code, stock.Name, stock.Price)
+		if err != nil {
+			description := fmt.Sprint(err)
+			revel.AppLog.Warn(description)
+			return uCtrl.RenderText("fail to insert gamedata: "+description)
+		}
+	}
 
-	gd, err := model.AddGameData(game.Id, user.Id, stock.Id, startPrice, reason)
+	gamedatauser, err := model.AddGameDataUser(gamedata.Id, user.Id, reason)
 	if err != nil {
 		description := fmt.Sprint(err)
 		revel.AppLog.Warn(description)
-		return uCtrl.RenderText("Error insert gamedata into database!")
+		return uCtrl.RenderText("fail to insert gamedata_user: "+description)
+	}
+
+	_, err = model.AddUserGameData(user.Id, game.Id, gamedata.Id)
+	if err != nil {
+		description := fmt.Sprint(err)
+		revel.AppLog.Warn(description)
+		return uCtrl.RenderText("fail to insert user_gamedata: "+description)
 	} else {
-		return uCtrl.RenderJSON(gd)
+		return uCtrl.RenderJSON(gamedatauser)
 	}
 }
