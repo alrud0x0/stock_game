@@ -14,10 +14,11 @@ type GameController struct {
 }
 
 func (gCtrl GameController) Add() revel.Result {
-	var jsonData map[string]interface{}
+	var jsonData map[string]string
 	gCtrl.Params.BindJSON(&jsonData)
 
-	dateString := jsonData["date"].(string)
+	dateString := jsonData["date"]
+	fmt.Println(dateString)
 	date, err := time.Parse(time.RFC3339, dateString)
 
 	game, err := model.AddGame(date)
@@ -48,6 +49,8 @@ func (gCtrl GameController) Get() revel.Result {
 		revel.AppLog.Warn(description)
 		return gCtrl.RenderText("Error fetching game into database!")
 	} else {
+
+		gCtrl.Params.Query.Get("detail")
 		return gCtrl.RenderJSON(game)
 	}
 }
@@ -55,14 +58,35 @@ func (gCtrl GameController) Get() revel.Result {
 func (gCtrl GameController) GetData() revel.Result {
 	game, err := GetGameByParam(gCtrl.Params.Get("gameId"))
 
-	gamedataList, _ := model.GetGameDatasByGameId(game.Id)
-	response, _ := ConvertGameStocksResponse(gamedataList)
+	gamedataList, err := model.GetGameDatasByGameId(game.Id)
 	if err != nil {
 		description := fmt.Sprint(err)
 		revel.AppLog.Warn(description)
 		return gCtrl.RenderText("Error fetching game into database!")
 	} else {
-		return gCtrl.RenderJSON(response)
+		return gCtrl.RenderJSON(gamedataList)
+	}
+}
+
+func (gCtrl GameController) GetDataByStock() revel.Result {
+	game, err := GetGameByParam(gCtrl.Params.Get("gameId"))
+	stock, err := GetStockByParam(gCtrl.Params.Get("stockId"))
+
+	gamedata, err := model.GetGameDataByGameStock(game.Id, stock.Id)
+	if err != nil {
+		description := fmt.Sprint(err)
+		revel.AppLog.Warn(description)
+		return gCtrl.RenderText("Error fetching game into database!")
+	}
+
+	gamedata_users, err := model.GetGameDatasUserByGameDataId(gamedata.Id)
+	if err != nil {
+		description := fmt.Sprint(err)
+		revel.AppLog.Warn(description)
+		return gCtrl.RenderText("Error fetching game into database!")
+	} else {
+		responses, _ := ConvertGameDataUserDisplay(gamedata_users)
+		return gCtrl.RenderJSON(responses)
 	}
 }
 
@@ -74,8 +98,9 @@ func (gCtrl GameController) Update() revel.Result {
 	gCtrl.Params.BindJSON(&jsonData)
 	dateString := jsonData["date"].(string)
 	date, err := time.Parse(time.RFC3339, dateString)
+	active := int(jsonData["active"].(float64))
 
-	game, err := model.UpdateGame(gameId, date)
+	game, err := model.UpdateGame(gameId, date, active)
 	if err != nil {
 		description := fmt.Sprint(err)
 		revel.AppLog.Warn(description)

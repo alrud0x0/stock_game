@@ -16,11 +16,11 @@ func (sCtrl StockController) Add() revel.Result {
 	var jsonData map[string]interface{}
 	sCtrl.Params.BindJSON(&jsonData)
 
-	uid := jsonData["uid"].(string)
+	code := jsonData["code"].(string)
 	name := jsonData["name"].(string)
-	price := jsonData["price"].(float64)
+	price := int(jsonData["price"].(int))
 
-	stock, err := model.AddStock(uid, name, price)
+	stock, err := model.AddStock(code, name, price)
 	if err != nil {
 		description := fmt.Sprint(err)
 		revel.AppLog.Warn(description)
@@ -59,9 +59,10 @@ func (sCtrl StockController) Update() revel.Result {
 	stockIdString := sCtrl.Params.Get("stockId")
 	stockId, err := strconv.Atoi(stockIdString)
 
-	var jsonData map[string]interface{}
+	var jsonData map[string]int
 	sCtrl.Params.BindJSON(&jsonData)
-	price := jsonData["price"].(float64)
+	price := jsonData["price"]
+	fmt.Println(price)
 
 	stock, err := model.UpdateStock(stockId, price)
 	if err != nil {

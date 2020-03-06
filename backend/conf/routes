@@ -13,9 +13,8 @@ GET     /                                       App.Index
 POST        /api/v1/login               UserController.Login
 
 # User
-POST        /api/v1/users               UserController.Add
-PUT         /api/v1/users/:userId       UserController.Update
-
+POST        /api/v1/users                             UserController.Add
+PUT         /api/v1/users/:userId                     UserController.Update
 POST        /api/v1/users/:userId/games/:gameId       UserController.JoinGame
 
 # Stock
@@ -26,12 +25,13 @@ PUT         /api/v1/stocks/:stockId      StockController.Update
 DELETE      /api/v1/stocks/:stockId      StockController.Delete
 
 # Game
-POST        /api/v1/games                       GameController.Add
-GET         /api/v1/games                       GameController.List
-GET         /api/v1/games/:gameId               GameController.Get
-GET         /api/v1/games/:gameId/gamedata      GameController.GetData
-PUT         /api/v1/games/:gameId               GameController.Update
-DELETE      /api/v1/games/:gameId               GameController.Delete
+POST        /api/v1/games                           GameController.Add
+GET         /api/v1/games                           GameController.List
+GET         /api/v1/games/:gameId                   GameController.Get
+GET         /api/v1/games/:gameId/data              GameController.GetData
+GET         /api/v1/games/:gameId/stock/:stockId    GameController.GetDataByStock
+PUT         /api/v1/games/:gameId                   GameController.Update
+DELETE      /api/v1/games/:gameId                   GameController.Delete
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
