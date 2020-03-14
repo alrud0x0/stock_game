@@ -9,7 +9,7 @@
 import GameTable from './game/GameTable.vue'
 
 export default {
-  name: 'currentGame',
+  name: 'gameHistoryDetails',
   components: {
     GameTable
   },
@@ -23,7 +23,7 @@ export default {
           },
           {
             key : 'price',
-            label : '현재값',
+            label : '시초가',
             class: 'align-middle'
           },
           {
@@ -41,10 +41,10 @@ export default {
         items: [
           {
               stock: '삼성전자',
-              price: '60000',
+              price: '48000',
               comparison: {
-                  rate : '10',
-                  difference : '3000'
+                  rate : '7',
+                  difference : '2000'
               },
               vote: {
                   count : '3',
@@ -87,8 +87,8 @@ export default {
               }
           }
         ],
-        gameTitle : '20.03.13 6차',
-        isVotable : true
+        gameTitle : '2020.02.13',
+        isVotable : false
       }
   }
 }

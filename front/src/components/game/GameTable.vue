@@ -1,6 +1,6 @@
 <template>
   <div id="gameTable">
-    <div align="middle" class="common-margin">
+    <div align="middle" >
       <h3>{{ gameTitle }}</h3>
     </div>
     <div v-if="isVotable" align="middle" class="common-margin">
